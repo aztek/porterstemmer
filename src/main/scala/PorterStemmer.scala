@@ -17,7 +17,9 @@ object PorterStemmer {
       "ss" -> "ss",
       "s" -> "")
 
-    if ((stem matchedBy ((~v~) + "ed")) || (stem matchedBy ((~v~) + "ing"))) {
+    if ((stem matchedBy ((~v~) + "ed")) ||
+        (stem matchedBy ((~v~) + "ing"))) {
+
       stem = stem.applyReplaces(~v~)("ed" -> "", "ing" -> "")
 
       stem = stem.applyReplaces(
@@ -86,7 +88,8 @@ object PorterStemmer {
       "ize" -> "")
 
     // Tide up a little bit
-    stem = stem applyReplaces((m > 1) + "e" -> "", ((m == 1) and not(~o)) + "e" -> "")
+    stem = stem applyReplaces((m > 1) + "e" -> "",
+                              ((m == 1) and not(~o)) + "e" -> "")
 
     stem = stem applyReplaces ((m > 1 and ~d and ~L) -> singleLetter)
 
@@ -95,7 +98,8 @@ object PorterStemmer {
 
   /**
    * Pattern that is matched against the word.
-   * Usually, the end of the word is compared to suffix, and the beginning is checked to satisfy a condition.
+   * Usually, the end of the word is compared to suffix,
+   * and the beginning is checked to satisfy a condition.
    * @param condition Condition to be checked
    * @param suffix Expected suffix of the word
    */
@@ -130,11 +134,8 @@ object PorterStemmer {
   }
 
   private val S = Condition(_ endsWith "s")
-
   private val Z = Condition(_ endsWith "z")
-
   private val L = Condition(_ endsWith "l")
-
   private val T = Condition(_ endsWith "t")
 
   private val d = Condition(_.endsWithCC)
@@ -194,7 +195,8 @@ object PorterStemmer {
     def measure = word.indices.filter(pos => hasVowelAt(pos) && hasConsonantAt(pos + 1)).length
 
     def matchedBy: Pattern => Boolean = {
-      case Pattern(condition, suffix) => endsWith(suffix) && (trimSuffix(suffix.length) satisfies condition)
+      case Pattern(condition, suffix) =>
+        endsWith(suffix) && (trimSuffix(suffix.length) satisfies condition)
     }
 
     def applyReplaces(replaces: (Pattern, StemBuilder)*): Word = {
