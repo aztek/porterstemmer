@@ -93,8 +93,18 @@ object PorterStemmer {
     stem.toString
   }
 
+  /**
+   * Pattern that is matched against the word.
+   * Usually, the end of the word is compared to suffix, and the beginning is checked to satisfy a condition.
+   * @param condition Condition to be checked
+   * @param suffix Expected suffix of the word
+   */
   private case class Pattern(condition: Condition, suffix: String)
 
+  /**
+   * Condition, that is checked against the beginning of the word
+   * @param predicate Predicate to be applied to the word
+   */
   private case class Condition(predicate: Word => Boolean) {
     def + = new Pattern(this, _: String)
 
@@ -133,6 +143,10 @@ object PorterStemmer {
 
   private val v = Condition(_.containsVowels)
 
+  /**
+   * Builder of the stem
+   * @param build Function to be called to build a stem
+   */
   private case class StemBuilder(build: Word => Word)
 
   private def suffixStemBuilder(suffix: String) = StemBuilder(_ + suffix)
@@ -142,11 +156,7 @@ object PorterStemmer {
   private class Word(string: String) {
     val word = string.toLowerCase
 
-    def apply = word(_)
-
     def trimSuffix(suffixLength: Int) = new Word(word substring (0, word.length - suffixLength))
-
-    def length = word.length
 
     def endsWith = word endsWith _
 
@@ -155,13 +165,15 @@ object PorterStemmer {
     def satisfies = (_: Condition).predicate(this)
 
     def hasConsonantAt(position: Int): Boolean =
-      word.indices.contains(position) && (word(position) match {
+      (word.indices contains position) && (word(position) match {
         case 'a' | 'e' | 'i' | 'o' | 'u' => false
         case 'y' if hasConsonantAt(position + 1) => false
         case _ => true
       })
 
     def hasVowelAt = !hasConsonantAt(_: Int)
+
+    def containsVowels = word.indices exists hasVowelAt
 
     def endsWithCC =
       (word.length > 1) &&
@@ -175,8 +187,10 @@ object PorterStemmer {
         hasConsonantAt(word.length - 3) &&
         !(Set('w', 'x', 'y') contains word(word.length - 2))
 
-    def containsVowels = word.indices exists hasVowelAt
-
+    /**
+     * Measure of the word -- the number of VCs
+     * @return integer
+     */
     def measure = word.indices.filter(pos => hasVowelAt(pos) && hasConsonantAt(pos + 1)).length
 
     def matchedBy: Pattern => Boolean = {
@@ -199,8 +213,8 @@ object PorterStemmer {
   }
 
   private implicit def emptyCondition(rule: (String, StemBuilder)): (Pattern, StemBuilder) = {
-    val (stem, suffix) = rule
-    (Pattern(emptyCondition, stem), suffix)
+    val (stem, builder) = rule
+    (Pattern(emptyCondition, stem), builder)
   }
 
   private implicit def replaceSuffix(rule: (String, String)): (Pattern, StemBuilder) = {
@@ -217,6 +231,6 @@ object PorterStemmer {
     val (condition, builder) = rule
     (Pattern(condition, ""), builder)
   }
-  
+
   private implicit def stringToStem: String => StemBuilder = suffixStemBuilder
 }
