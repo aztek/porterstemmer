@@ -212,25 +212,9 @@ object PorterStemmer {
     override def toString = word
   }
 
-  private implicit def emptyCondition(rule: (String, StemBuilder)): (Pattern, StemBuilder) = {
-    val (stem, builder) = rule
-    (Pattern(emptyCondition, stem), builder)
-  }
-
-  private implicit def replaceSuffix(rule: (String, String)): (Pattern, StemBuilder) = {
-    val (affix, suffix) = rule
-    (Pattern(emptyCondition, affix), suffix)
-  }
-
-  private implicit def emptySuffix(rule: (Condition, String)): (Pattern, StemBuilder) = {
-    val (condition, suffix) = rule
-    (Pattern(condition, ""), suffix)
-  }
-
-  private implicit def emptySuffixStem(rule: (Condition, StemBuilder)): (Pattern, StemBuilder) = {
-    val (condition, builder) = rule
-    (Pattern(condition, ""), builder)
-  }
-
-  private implicit def stringToStem: String => StemBuilder = suffixStemBuilder
+  private implicit def pimpMyRule[P <% Pattern, SB <% StemBuilder]
+                                 (rule: (P, SB)): (Pattern, StemBuilder) = (rule._1, rule._2)
+  private implicit def emptyConditionPattern: String => Pattern = Pattern(emptyCondition, _)
+  private implicit def emptySuffixPattern: Condition => Pattern = Pattern(_, "")
+  private implicit def suffixedStemBuilder: String => StemBuilder = suffixStemBuilder
 }
