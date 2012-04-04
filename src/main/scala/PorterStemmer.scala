@@ -93,9 +93,7 @@ object PorterStemmer {
     stem.toString
   }
 
-  private case class Pattern(condition: Condition, suffix: String) {
-    def capture(word: Word) = word substring (0, word.length - suffix.length)
-  }
+  private case class Pattern(condition: Condition, suffix: String)
 
   private case class Condition(predicate: Word => Boolean) {
     def + = new Pattern(this, _: String)
@@ -139,16 +137,14 @@ object PorterStemmer {
 
   private def suffixStemBuilder(suffix: String) = StemBuilder(_ + suffix)
 
-  private val singleLetter = StemBuilder(word => word substring(0, word.length - 1))
+  private val singleLetter = StemBuilder(_ trimSuffix 1)
 
   private class Word(string: String) {
     val word = string.toLowerCase
 
     def apply = word(_)
 
-    def substring(start: Int) = new Word(word substring start)
-
-    def substring(start: Int, end: Int) = new Word(word substring(start, end))
+    def trimSuffix(suffixLength: Int) = new Word(word substring (0, word.length - suffixLength))
 
     def length = word.length
 
@@ -183,13 +179,13 @@ object PorterStemmer {
 
     def measure = word.indices.filter(pos => hasVowelAt(pos) && hasConsonantAt(pos + 1)).length
 
-    def matchedBy(pattern: Pattern) = pattern match {
-      case Pattern(condition, suffix) => endsWith(suffix) && ((pattern capture this) satisfies condition)
+    def matchedBy: Pattern => Boolean = {
+      case Pattern(condition, suffix) => endsWith(suffix) && (trimSuffix(suffix.length) satisfies condition)
     }
 
     def applyReplaces(replaces: (Pattern, StemBuilder)*): Word = {
       for ((pattern, stemBuilder) <- replaces if matchedBy(pattern))
-        return stemBuilder build (pattern capture this)
+        return stemBuilder build trimSuffix(pattern.suffix.length)
       this
     }
 
