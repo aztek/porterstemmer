@@ -6,8 +6,10 @@ This library uses [Maven](http://maven.apache.org/). To install, do the followin
 3. `mvn install`
 
 To use it in your project, put this dependency in your `pom.xml`:
-    <dependency>
-        <groupId>com.github.aztek</groupId>
-        <artifactId>porterstemmer</artifactId>
-        <version>0.0.1</version>
-    </dependency>
+```xml
+<dependency>
+	<groupId>com.github.aztek</groupId>
+	<artifactId>porterstemmer</artifactId>
+	<version>0.0.1</version>
+</dependency>
+```
