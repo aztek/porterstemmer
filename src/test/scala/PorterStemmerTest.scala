@@ -1,5 +1,7 @@
 package com.github.aztek.porterstemmer.test
 
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import com.github.aztek.porterstemmer.PorterStemmer
@@ -9,6 +11,7 @@ import com.github.aztek.porterstemmer.PorterStemmer
  *
  * @author Evgeny Kotelnikov <evgeny.kotelnikov@gmail.com>
  */
+@RunWith(classOf[JUnitRunner])
 class PorterStemmerTest extends FlatSpec with ShouldMatchers {
   behavior of "Porter's stemmer"
 
