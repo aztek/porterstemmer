@@ -168,7 +168,7 @@ object PorterStemmer {
     def hasConsonantAt(position: Int): Boolean =
       (word.indices contains position) && (word(position) match {
         case 'a' | 'e' | 'i' | 'o' | 'u' ⇒ false
-        case 'y' if hasConsonantAt(position + 1) ⇒ false
+        case 'y' if hasConsonantAt(position - 1) ⇒ false
         case _ ⇒ true
       })
 
