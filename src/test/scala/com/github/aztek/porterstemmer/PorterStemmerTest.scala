@@ -1,9 +1,8 @@
 package com.github.aztek.porterstemmer
 
 import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
-import org.scalatest.Matchers._
+import org.scalatest.junit.JUnitRunner
 
 /**
  * ScalaTest specification for PorterStemmer.
