@@ -1,9 +1,8 @@
 package com.github.aztek.porterstemmer
 
 import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.FlatSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.junit.JUnitRunner
 
 /**
  * ScalaTest specification for PorterStemmer.
@@ -11,7 +10,7 @@ import org.scalatest.matchers.ShouldMatchers
  * @author Evgeny Kotelnikov <evgeny.kotelnikov@gmail.com>
  */
 @RunWith(classOf[JUnitRunner])
-class PorterStemmerTest extends FlatSpec with ShouldMatchers {
+class PorterStemmerTest extends FlatSpec {
   behavior of "Porter's stemmer"
 
   it should "stem plurals" in {
@@ -24,7 +23,7 @@ class PorterStemmerTest extends FlatSpec with ShouldMatchers {
     )
 
     for ((word, stem) <- plurals)
-      expect(stem)(PorterStemmer.stem(word))
+      assertResult(stem)(PorterStemmer.stem(word))
   }
 
   it should "stem past participles" in {
@@ -52,7 +51,7 @@ class PorterStemmerTest extends FlatSpec with ShouldMatchers {
     )
 
     for ((word, stem) <- participles)
-      expect(stem)(PorterStemmer.stem(word))
+      assertResult(stem)(PorterStemmer.stem(word))
   }
 
   it should "change suffixes" in {
@@ -115,6 +114,6 @@ class PorterStemmerTest extends FlatSpec with ShouldMatchers {
     )
 
     for ((word, stem) <- changes)
-      expect(stem)(PorterStemmer.stem(word))
+      assertResult(stem)(PorterStemmer.stem(word))
   }
 }
