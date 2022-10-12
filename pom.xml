@@ -8,7 +8,7 @@
     <version>0.0.1</version>
     <properties>
 	    <scala.binary.version>2.11</scala.binary.version>
-	    <scala.version>2.11.12</scala.version>
+	    <scala.version>2.13.9</scala.version>
     </properties>
 
     <repositories>
